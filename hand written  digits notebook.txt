@@ -1,0 +1,359 @@
+
+Code cell <X4nSJIYfdDnJ>
+#%% [code]
+import pandas as pd
+%matplotlib inline
+import matplotlib.pyplot as plt 
+from sklearn.datasets import load_digits
+
+
+Code cell <mt5LbyeneUTw>
+#%% [code]
+digits = load_digits()
+
+Code cell <i4e6_ed9eblJ>
+#%% [code]
+dir(digits)
+Execution output from Jun 19, 2020 11:13 AM
+	text/plain
+		['DESCR', 'data', 'images', 'target', 'target_names']
+
+Code cell <VlDz0G5jegpn>
+#%% [code]
+digits.data[0]
+Execution output from Jun 19, 2020 11:13 AM
+	text/plain
+		array([ 0.,  0.,  5., 13.,  9.,  1.,  0.,  0.,  0.,  0., 13., 15., 10.,
+		       15.,  5.,  0.,  0.,  3., 15.,  2.,  0., 11.,  8.,  0.,  0.,  4.,
+		       12.,  0.,  0.,  8.,  8.,  0.,  0.,  5.,  8.,  0.,  0.,  9.,  8.,
+		        0.,  0.,  4., 11.,  0.,  1., 12.,  7.,  0.,  0.,  2., 14.,  5.,
+		       10., 12.,  0.,  0.,  0.,  0.,  6., 13., 10.,  0.,  0.,  0.])
+
+Code cell <xeljfiPAeqdL>
+#%% [code]
+digits.DESCR[0]
+
+Execution output from Jun 19, 2020 11:13 AM
+	text/plain
+		'.'
+
+Code cell <XdkTu_Pd0MbG>
+#%% [code]
+digits.target
+Execution output from Jun 19, 2020 11:13 AM
+	text/plain
+		array([0, 1, 2, ..., 8, 9, 8])
+
+Code cell <k3j65S9z0Rhx>
+#%% [code]
+digits.target_names
+Execution output from Jun 19, 2020 11:13 AM
+	text/plain
+		array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+Code cell <TTM0lpkQzGxs>
+#%% [code]
+plt.gray()
+plt.matshow(digits.images[0])
+Execution output from Jun 19, 2020 6:38 AM
+	text/plain
+		<matplotlib.image.AxesImage at 0x7fb2af545128>
+		<Figure size 432x288 with 0 Axes>
+		<Figure size 288x288 with 1 Axes>
+
+Code cell <pCy4ni6HyXz->
+#%% [code]
+plt.gray() 
+for i in range(4): 
+    plt.matshow(digits.images[i])
+Execution output from Jun 19, 2020 11:14 AM
+	text/plain
+		<Figure size 432x288 with 0 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+
+Code cell <KWXCj4uGhvY4>
+#%% [code]
+
+plt.gray() 
+for i in range(5): 
+    plt.matshow(digits.images[i])
+Execution output from Jun 19, 2020 11:14 AM
+	text/plain
+		<Figure size 432x288 with 0 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+		<Figure size 288x288 with 1 Axes>
+
+Code cell <8Y1VBDc-lm6U>
+#%% [code]
+digits.target[0:5]
+Execution output from Jun 19, 2020 11:15 AM
+	text/plain
+		array([0, 1, 2, 3, 4])
+
+Code cell <uHbFkqWt09pF>
+#%% [code]
+digits.data[:5]
+Execution output from Jun 19, 2020 11:26 AM
+	text/plain
+		array([[ 0.,  0.,  5., 13.,  9.,  1.,  0.,  0.,  0.,  0., 13., 15., 10.,
+		        15.,  5.,  0.,  0.,  3., 15.,  2.,  0., 11.,  8.,  0.,  0.,  4.,
+		        12.,  0.,  0.,  8.,  8.,  0.,  0.,  5.,  8.,  0.,  0.,  9.,  8.,
+		         0.,  0.,  4., 11.,  0.,  1., 12.,  7.,  0.,  0.,  2., 14.,  5.,
+		        10., 12.,  0.,  0.,  0.,  0.,  6., 13., 10.,  0.,  0.,  0.],
+		       [ 0.,  0.,  0., 12., 13.,  5.,  0.,  0.,  0.,  0.,  0., 11., 16.,
+		         9.,  0.,  0.,  0.,  0.,  3., 15., 16.,  6.,  0.,  0.,  0.,  7.,
+		        15., 16., 16.,  2.,  0.,  0.,  0.,  0.,  1., 16., 16.,  3.,  0.,
+		         0.,  0.,  0.,  1., 16., 16.,  6.,  0.,  0.,  0.,  0.,  1., 16.,
+		        16.,  6.,  0.,  0.,  0.,  0.,  0., 11., 16., 10.,  0.,  0.],
+		       [ 0.,  0.,  0.,  4., 15., 12.,  0.,  0.,  0.,  0.,  3., 16., 15.,
+		        14.,  0.,  0.,  0.,  0.,  8., 13.,  8., 16.,  0.,  0.,  0.,  0.,
+		         1.,  6., 15., 11.,  0.,  0.,  0.,  1.,  8., 13., 15.,  1.,  0.,
+		         0.,  0.,  9., 16., 16.,  5.,  0.,  0.,  0.,  0.,  3., 13., 16.,
+		        16., 11.,  5.,  0.,  0.,  0.,  0.,  3., 11., 16.,  9.,  0.],
+		       [ 0.,  0.,  7., 15., 13.,  1.,  0.,  0.,  0.,  8., 13.,  6., 15.,
+		         4.,  0.,  0.,  0.,  2.,  1., 13., 13.,  0.,  0.,  0.,  0.,  0.,
+		         2., 15., 11.,  1.,  0.,  0.,  0.,  0.,  0.,  1., 12., 12.,  1.,
+		         0.,  0.,  0.,  0.,  0.,  1., 10.,  8.,  0.,  0.,  0.,  8.,  4.,
+		         5., 14.,  9.,  0.,  0.,  0.,  7., 13., 13.,  9.,  0.,  0.],
+		       [ 0.,  0.,  0.,  1., 11.,  0.,  0.,  0.,  0.,  0.,  0.,  7.,  8.,
+		         0.,  0.,  0.,  0.,  0.,  1., 13.,  6.,  2.,  2.,  0.,  0.,  0.,
+		         7., 15.,  0.,  9.,  8.,  0.,  0.,  5., 16., 10.,  0., 16.,  6.,
+		         0.,  0.,  4., 15., 16., 13., 16.,  1.,  0.,  0.,  0.,  0.,  3.,
+		        15., 10.,  0.,  0.,  0.,  0.,  0.,  2., 16.,  4.,  0.,  0.]])
+
+Code cell <fNayjEjp1gxM>
+#%% [code]
+df = pd.DataFrame(digits.data)
+df.head()
+Execution output from Jun 19, 2020 11:31 AM
+	text/plain
+		0    1    2     3     4     5    6   ...   57   58    59    60    61   62   63
+		0  0.0  0.0  5.0  13.0   9.0   1.0  0.0  ...  0.0  6.0  13.0  10.0   0.0  0.0  0.0
+		1  0.0  0.0  0.0  12.0  13.0   5.0  0.0  ...  0.0  0.0  11.0  16.0  10.0  0.0  0.0
+		2  0.0  0.0  0.0   4.0  15.0  12.0  0.0  ...  0.0  0.0   3.0  11.0  16.0  9.0  0.0
+		3  0.0  0.0  7.0  15.0  13.0   1.0  0.0  ...  0.0  7.0  13.0  13.0   9.0  0.0  0.0
+		4  0.0  0.0  0.0   1.0  11.0   0.0  0.0  ...  0.0  0.0   2.0  16.0   4.0  0.0  0.0
+		
+		[5 rows x 64 columns]
+
+Code cell <huuAVkaf2ZNF>
+#%% [code]
+digits.target
+Execution output from Jun 19, 2020 11:32 AM
+	text/plain
+		array([0, 1, 2, ..., 8, 9, 8])
+
+Code cell <fUGSfCAK2kad>
+#%% [code]
+df['target']= digits.target
+df.head()
+Execution output from Jun 19, 2020 11:33 AM
+	text/plain
+		0    1    2     3     4     5  ...    59    60    61   62   63  target
+		0  0.0  0.0  5.0  13.0   9.0   1.0  ...  13.0  10.0   0.0  0.0  0.0       0
+		1  0.0  0.0  0.0  12.0  13.0   5.0  ...  11.0  16.0  10.0  0.0  0.0       1
+		2  0.0  0.0  0.0   4.0  15.0  12.0  ...   3.0  11.0  16.0  9.0  0.0       2
+		3  0.0  0.0  7.0  15.0  13.0   1.0  ...  13.0  13.0   9.0  0.0  0.0       3
+		4  0.0  0.0  0.0   1.0  11.0   0.0  ...   2.0  16.0   4.0  0.0  0.0       4
+		
+		[5 rows x 65 columns]
+
+Code cell <hTH8qaIY3yup>
+#%% [code]
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test= train_test_split(df.drop(['target'], axis = 'columns'),digits.target,test_size=0.2)
+
+
+Code cell <U9FbLOQN4dBa>
+#%% [code]
+len(x_test)
+Execution output from Jun 19, 2020 11:40 AM
+	text/plain
+		360
+
+Code cell <r-mBCuKC4mA3>
+#%% [code]
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=40)
+model.fit(x_train,y_train)
+Execution output from Jun 19, 2020 11:48 AM
+	text/plain
+		RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+		                       criterion='gini', max_depth=None, max_features='auto',
+		                       max_leaf_nodes=None, max_samples=None,
+		                       min_impurity_decrease=0.0, min_impurity_split=None,
+		                       min_samples_leaf=1, min_samples_split=2,
+		                       min_weight_fraction_leaf=0.0, n_estimators=40,
+		                       n_jobs=None, oob_score=False, random_state=None,
+		                       verbose=0, warm_start=False)
+
+Code cell <RxVhznVO5n_t>
+#%% [code]
+model.score(x_test,y_test)
+Execution output from Jun 19, 2020 11:48 AM
+	text/plain
+		0.975
+
+Code cell <9mwptPHV6XVn>
+#%% [code]
+y_predicted =model.predict(x_test)
+
+Code cell <MabDumza6l9q>
+#%% [code]
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test,y_predicted)
+cm
+Execution output from Jun 19, 2020 11:51 AM
+	text/plain
+		array([[38,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+		       [ 0, 35,  0,  0,  0,  0,  0,  0,  0,  0],
+		       [ 0,  0, 41,  0,  0,  0,  0,  1,  0,  0],
+		       [ 0,  0,  0, 47,  0,  0,  0,  0,  0,  0],
+		       [ 0,  0,  0,  0, 32,  0,  0,  0,  0,  0],
+		       [ 0,  0,  0,  0,  0, 29,  0,  0,  1,  1],
+		       [ 0,  0,  0,  0,  0,  0, 36,  0,  0,  0],
+		       [ 0,  0,  0,  0,  0,  0,  0, 29,  0,  0],
+		       [ 0,  1,  0,  1,  0,  1,  0,  2, 23,  0],
+		       [ 0,  0,  0,  1,  0,  0,  0,  0,  0, 41]])
+
+Code cell <ZNS1NcLE7Jcc>
+#%% [code]
+import seaborn as sn
+plt.figure(figsize=(15,10))
+sn.heatmap(cm,annot=True)
+plt.xlabel("PREDICTED VALUES")
+plt.ylabel("ACTUAL VALUES(truth)")
+Execution output from Jun 19, 2020 11:53 AM
+	Stream
+		/usr/local/lib/python3.6/dist-packages/statsmodels/tools/_testing.py:19: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
+		  import pandas.util.testing as tm
+	text/plain
+		Text(114.0, 0.5, 'ACTUAL VALUES(truth)')
+		<Figure size 1080x720 with 2 Axes>
+
+Code cell <0aWZez7Sl350>
+#%% [code]
+from sklearn.model_selection import train_test_split
+
+
+Code cell <v4ZcvU8Cm2_Y>
+#%% [code]
+x_train,x_test,y_train,y_test= train_test_split(digits.data,digits.target,test_size=0.2)
+
+Code cell <0yVYnuxim7_e>
+#%% [code]
+len(x_train)
+Execution output from Jun 19, 2020 11:54 AM
+	text/plain
+		1437
+
+Code cell <gfLiHXEuutPb>
+#%% [code]
+len(x_test)
+Execution output from Jun 19, 2020 11:54 AM
+	text/plain
+		360
+
+Code cell <VMdN_A_Uu8jF>
+#%% [code]
+from  sklearn.linear_model import LogisticRegression
+
+Code cell <nhT_vYDbvNal>
+#%% [code]
+model = LogisticRegression()
+
+Code cell <wdIhzFFuvW1L>
+#%% [code]
+model.fit(x_train,y_train)
+Execution output from Jun 19, 2020 11:55 AM
+	Stream
+		/usr/local/lib/python3.6/dist-packages/sklearn/linear_model/_logistic.py:940: ConvergenceWarning: lbfgs failed to converge (status=1):
+		STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.
+		
+		Increase the number of iterations (max_iter) or scale the data as shown in:
+		    https://scikit-learn.org/stable/modules/preprocessing.html
+		Please also refer to the documentation for alternative solver options:
+		    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+		  extra_warning_msg=_LOGISTIC_SOLVER_CONVERGENCE_MSG)
+	text/plain
+		LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+		                   intercept_scaling=1, l1_ratio=None, max_iter=100,
+		                   multi_class='auto', n_jobs=None, penalty='l2',
+		                   random_state=None, solver='lbfgs', tol=0.0001, verbose=0,
+		                   warm_start=False)
+
+Code cell <8lL_WKx8vs1i>
+#%% [code]
+model.score(x_test,y_test)
+Execution output from Jun 19, 2020 11:55 AM
+	text/plain
+		0.9694444444444444
+
+Code cell <A8ovUNEov3Wu>
+#%% [code]
+plt.matshow(digits.images[67])
+Execution output from Jun 19, 2020 11:55 AM
+	text/plain
+		<matplotlib.image.AxesImage at 0x7f3f046f4e80>
+		<Figure size 288x288 with 1 Axes>
+
+Code cell <9_RGly6qwIwC>
+#%% [code]
+digits.target[67]
+Execution output from Jun 19, 2020 11:55 AM
+	text/plain
+		6
+
+Code cell <iqLdWcbgwPTF>
+#%% [code]
+model.predict(digits.data[[67]])
+Execution output from Jun 19, 2020 11:55 AM
+	text/plain
+		array([6])
+
+Code cell <06m7DkbrwcL2>
+#%% [code]
+model.predict(digits.data[0:5])
+Execution output from Jun 19, 2020 11:55 AM
+	text/plain
+		array([0, 1, 2, 3, 4])
+
+Code cell <s7-uDQbpwoU8>
+#%% [code]
+y_predicted= model.predict(x_test)
+from sklearn.metrics import confusion_matrix
+
+cm=confusion_matrix(y_test,y_predicted)
+cm
+Execution output from Jun 19, 2020 11:55 AM
+	text/plain
+		array([[47,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+		       [ 0, 34,  0,  0,  1,  0,  0,  0,  0,  0],
+		       [ 0,  1, 27,  0,  0,  0,  0,  0,  0,  0],
+		       [ 0,  0,  0, 31,  0,  1,  0,  0,  0,  1],
+		       [ 0,  0,  0,  0, 35,  0,  0,  0,  0,  0],
+		       [ 0,  0,  0,  0,  1, 33,  0,  0,  0,  0],
+		       [ 0,  0,  0,  0,  0,  0, 34,  0,  0,  0],
+		       [ 0,  0,  0,  0,  0,  0,  0, 37,  0,  0],
+		       [ 0,  2,  0,  0,  1,  1,  0,  0, 33,  0],
+		       [ 0,  0,  0,  1,  0,  0,  0,  0,  1, 38]])
+
+Code cell <fK14AXYsxahs>
+#%% [code]
+import seaborn as sn
+plt.figure(figsize=(10,9))
+sn.heatmap(cm,annot=True)
+plt.xlabel("PREDICTED VALUES")
+plt.ylabel("ACTUAL VALUES(truth)")
+Execution output from Jun 19, 2020 11:56 AM
+	text/plain
+		Text(69.0, 0.5, 'ACTUAL VALUES(truth)')
+		<Figure size 720x648 with 2 Axes>
+
+
