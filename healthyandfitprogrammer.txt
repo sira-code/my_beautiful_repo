@@ -1,0 +1,165 @@
+import datetime
+import pygame
+
+pygame.init()
+
+water = 'water.mp3'
+eyes = 'eyes.mp3'
+physical = 'physical.mp3'
+
+input_name = input("ENTER YOUR NAME PLEASE:")
+print("{input_name.capitalize()} welcome to the office")
+file = input_name
+
+water_alarm = 20
+eyes_alarm = 30
+physical_alarm = 40
+
+
+ex = True
+dt = datetime.datetime.now()
+water_timer = dt.minute + water_alarm
+eyes_timer = dt.minute + eyes_alarm
+physical_timer = dt.minute + physical_alarm
+
+_file = open(file,'a')
+print(dt)
+while ex!= False:
+    new_dt = datetime.datetime.now()
+
+    if water_timer>=60 or eyes_timer>=60 or physical_timer>=60 :
+        if water_timer >= 60:
+            water_timer = water_timer - 60
+            dt = datetime.datetime.now()
+            minute = dt.minute
+
+        if eyes_timer >= 60:
+            eyes_timer = eyes_timer - 60
+            dt = datetime.datetime.now()
+            minute = dt.minute
+
+        if physical_timer >= 60:
+            physical_timer = physical_timer - 60
+            dt = datetime.datetime.now()
+            minute = dt.minute
+
+        else:
+            if new_dt.minute == physical_timer and new_dt.minute == water_timer:
+                print("First drink water and then do physical exersise", new_dt)
+
+                pygame.mixer.music.load(water)
+                pygame.mixer.music.play()
+
+                _input4 = input()
+
+                if _input4.lower() == "drank":
+                    _file.write("Drank Water at {datetime.datetime.now()} \n \n")
+                    pygame.mixer.music.stop()
+
+                pygame.mixer.music.load(physical)
+                pygame.mixer.music.play()
+
+                _input5 = input()
+                if _input5.lower() == "pydone":
+                    pygame.mixer.music.stop()
+                    _file.write(" Your Physical Exercise done at {datetime.datetime.now()} \n \n")
+                    d = datetime.datetime.now()
+                    eyes_timer = d.minute + eyes_alarm
+                    water_timer = d.minute + water_alarm
+                    physical_timer = d.minute + physical_alarm
+
+
+            elif new_dt.minute == physical_timer and new_dt.minute == eyes_timer:
+                print("First do eyes exercise please and then do physical exercise")
+
+                pygame.mixer.music.load(water)
+                pygame.mixer.music.play()
+
+                _input6 = input()
+
+                if _input6.lower() == "eye done":
+                    _file.write("Eye Exercise done at {datetime.datetime.now()} \n \n ")
+                    pygame.mixer.music.stop()
+
+                pygame.mixer.music.load(physical)
+                pygame.mixer.music.play()
+
+                _input7 = input()
+                if _input7.lower() == "pydone":
+                    pygame.mixer.music.stop()
+                    _file.write("Physical Exercise done at {datetime.datetime.now()} \n \n")
+
+                    d = datetime.datetime.now()
+                    eyes_timer = d.minute + eyes_alarm
+                    water_timer = d.minute + water_alarm
+                    physical_timer = d.minute + physical_alarm
+
+
+
+            elif new_dt.minute == water_timer and new_dt.minute == eyes_timer:
+                print("Drink water and then do eyes exercise")
+
+                pygame.mixer.music.load(water)
+                pygame.mixer.music.play()
+
+                _input8 = input()
+
+                if _input8.lower() == "eye done":
+                    _file.write("Eye Exercise done at {datetime.datetime.now()} \n \n")
+                    pygame.mixer.music.stop()
+
+                pygame.mixer.music.load(physical)
+                pygame.mixer.music.play()
+
+                _input9 = input()
+                if _input9.lower() == "drank":
+                    pygame.mixer.music.stop()
+                    _file.write("Drank Water at {datetime.datetime.now()} \n \n ")
+                    d = datetime.datetime.now()
+                    eyes_timer = d.minute + eyes_alarm
+                    water_timer = d.minute + water_alarm
+                    physical_timer = d.minute + physical_alarm
+
+            elif new_dt.minute == water_timer:
+                print("Please drank water", new_dt)
+                pygame.mixer.music.load(water)
+                pygame.mixer.music.play()
+
+                _input = input()
+
+                if _input.lower() == "drank":
+                    pygame.mixer.music.stop()
+                    _file.write("Drank Water at {datetime.datetime.now()} \n \n")
+                    water_timer = d.minute + water_alarm
+
+            elif new_dt.minute == eyes_timer:
+                print("Please do eyes exercise", new_dt)
+                pygame.mixer.music.load(eyes)
+                pygame.mixer.music.play()
+
+                _input2 = input()
+
+                if _input2.lower() == "eydone":
+                    pygame.mixer.music.stop()
+                    _file.write(" Your Eye Exercise done at {datetime.datetime.now()} \n \n")
+                    eyes_timer = d.minute + eyes_alarm
+
+            elif new_dt.minute == physical_timer:
+                print("Please do physical exercise", new_dt)
+                pygame.mixer.music.load(physical)
+                pygame.mixer.music.play()
+
+                _input3 = input()
+
+                if _input3.lower() == "pydone":
+                    pygame.mixer.music.stop()
+                    _file.write("Physical Exercise done at {datetime.datetime.now()} \n \n")
+                    d = datetime.datetime.now()
+                    eyes_timer = d.minute + eyes_alarm
+                    water_timer = d.minute + water_alarm
+                    physical_timer = d.minute + physical_alarm
+
+        _file.close()
+
+
+
