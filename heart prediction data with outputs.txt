@@ -1,0 +1,1101 @@
+Code cell <LPqyfsuO1_wT>
+#%% [code]
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly
+import plotly.express as px
+import plotly.offline as pyo
+from plotly.offline import init_notebook_mode,plot,iplot
+import cufflinks as cf
+
+Execution output from Jun 24, 2020 1:59 AM
+	Stream
+		/usr/local/lib/python3.6/dist-packages/statsmodels/tools/_testing.py:19: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
+		  import pandas.util.testing as tm
+
+Code cell <EqQgogzZ4EVr>
+#%% [code]
+pyo.init_notebook_mode(connected=True)
+cf.go_offline()
+Execution output from Jun 24, 2020 1:59 AM
+
+Code cell <wz54pX3H4XFa>
+#%% [code]
+df = pd.read_csv('heart_prediction.csv')
+df.head()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		age  sex  cp  trestbps  chol  fbs  ...  exang  oldpeak  slope  ca  thal  target
+		0   63    1   3       145   233    1  ...      0      2.3      0   0     1       1
+		1   37    1   2       130   250    0  ...      0      3.5      0   0     2       1
+		2   41    0   1       130   204    0  ...      0      1.4      2   0     2       1
+		3   56    1   1       120   236    0  ...      0      0.8      2   0     2       1
+		4   57    0   0       120   354    0  ...      1      0.6      2   0     2       1
+		
+		[5 rows x 14 columns]
+
+Code cell <Ws8BARUo4vlJ>
+#%% [code]
+df.info()
+Execution output from Jun 24, 2020 1:59 AM
+	Stream
+		<class 'pandas.core.frame.DataFrame'>
+		RangeIndex: 303 entries, 0 to 302
+		Data columns (total 14 columns):
+		 #   Column    Non-Null Count  Dtype  
+		---  ------    --------------  -----  
+		 0   age       303 non-null    int64  
+		 1   sex       303 non-null    int64  
+		 2   cp        303 non-null    int64  
+		 3   trestbps  303 non-null    int64  
+		 4   chol      303 non-null    int64  
+		 5   fbs       303 non-null    int64  
+		 6   restecg   303 non-null    int64  
+		 7   thalach   303 non-null    int64  
+		 8   exang     303 non-null    int64  
+		 9   oldpeak   303 non-null    float64
+		 10  slope     303 non-null    int64  
+		 11  ca        303 non-null    int64  
+		 12  thal      303 non-null    int64  
+		 13  target    303 non-null    int64  
+		dtypes: float64(1), int64(13)
+		memory usage: 33.3 KB
+
+Code cell <IefBEFnd5aid>
+#%% [code]
+info = ["age","1: male, 0: female","chest pain type, 1: typical angina, 2: atypical angina, 3: non-anginal pain, 4: asymptomatic","resting blood pressure"," serum cholestoral in mg/dl","fasting blood sugar > 120 mg/dl","resting electrocardiographic results (values 0,1,2)"," maximum heart rate achieved","exercise induced angina","oldpeak = ST depression induced by exercise relative to rest","the slope of the peak exercise ST segment","number of major vessels (0-3) colored by flourosopy","thal: 3 = normal; 6 = fixed defect; 7 = reversable defect"]
+
+for i in range (len(info)):
+  print(df.columns[i]+"\t"+info[i])
+Execution output from Jun 24, 2020 1:59 AM
+	Stream
+		age	age
+		sex	1: male, 0: female
+		cp	chest pain type, 1: typical angina, 2: atypical angina, 3: non-anginal pain, 4: asymptomatic
+		trestbps	resting blood pressure
+		chol	 serum cholestoral in mg/dl
+		fbs	fasting blood sugar > 120 mg/dl
+		restecg	resting electrocardiographic results (values 0,1,2)
+		thalach	 maximum heart rate achieved
+		exang	exercise induced angina
+		oldpeak	oldpeak = ST depression induced by exercise relative to rest
+		slope	the slope of the peak exercise ST segment
+		ca	number of major vessels (0-3) colored by flourosopy
+		thal	thal: 3 = normal; 6 = fixed defect; 7 = reversable defect
+
+Code cell <_aCx4cgW78-m>
+#%% [code]
+df.target
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		0      1
+		1      1
+		2      1
+		3      1
+		4      1
+		      ..
+		298    0
+		299    0
+		300    0
+		301    0
+		302    0
+		Name: target, Length: 303, dtype: int64
+
+Code cell <hu3FNtaS8KQu>
+#%% [code]
+df['target']
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		0      1
+		1      1
+		2      1
+		3      1
+		4      1
+		      ..
+		298    0
+		299    0
+		300    0
+		301    0
+		302    0
+		Name: target, Length: 303, dtype: int64
+
+Code cell <lHKqL8Ru8Yu3>
+#%% [code]
+df.groupby('target').sum()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		age  sex   cp  trestbps   chol  ...  exang  oldpeak  slope   ca  thal
+		target                                   ...                                  
+		0       7811  114   66     18547  34650  ...     76    218.8    161  161   351
+		1       8662   93  227     21335  39968  ...     23     96.2    263   60   350
+		
+		[2 rows x 13 columns]
+
+Code cell <jAeUpX-A8yq5>
+#%% [code]
+df.groupby('target').size()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		target
+		0    138
+		1    165
+		dtype: int64
+
+Code cell <t69_tZ_N89vB>
+#%% [code]
+df.shape
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		(303, 14)
+
+Code cell <_2N-sYa59IYK>
+#%% [code]
+df.size
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		4242
+
+Code cell <VUTnIkrW9X9N>
+#%% [code]
+df.describe()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		age         sex          cp  ...          ca        thal      target
+		count  303.000000  303.000000  303.000000  ...  303.000000  303.000000  303.000000
+		mean    54.366337    0.683168    0.966997  ...    0.729373    2.313531    0.544554
+		std      9.082101    0.466011    1.032052  ...    1.022606    0.612277    0.498835
+		min     29.000000    0.000000    0.000000  ...    0.000000    0.000000    0.000000
+		25%     47.500000    0.000000    0.000000  ...    0.000000    2.000000    0.000000
+		50%     55.000000    1.000000    1.000000  ...    0.000000    2.000000    1.000000
+		75%     61.000000    1.000000    2.000000  ...    1.000000    3.000000    1.000000
+		max     77.000000    1.000000    3.000000  ...    4.000000    3.000000    1.000000
+		
+		[8 rows x 14 columns]
+
+Code cell <6eH4Tu8e90FE>
+#%% [code]
+df['target'].unique()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		array([1, 0])
+
+Code cell <5dvJhaqh-Xnj>
+#%% [code]
+df.hist(figsize=(14,12))
+plt.show()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<Figure size 1008x864 with 16 Axes>
+
+Code cell <bRi-hKXo-yoh>
+#%% [code]
+plt.bar(x=df['sex'],height=df['age'])
+plt.show()
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <8kM7WjWm_4T5>
+#%% [code]
+sns.barplot(x="fbs", y="target", data=df)
+plt.show()
+
+
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <l93hzhElAVxv>
+#%% [code]
+sns.barplot(x=df['sex'],y=df['age'],hue=df['target'])
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7efc9621b4e0>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <_79SRyxXA2WN>
+#%% [code]
+sns.barplot(df["cp"],df['target'])
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7efc962444a8>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <u9xs33QXBIqr>
+#%% [code]
+sns.barplot(df["sex"],df['target'])
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7efc962446a0>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <9xT4oA_HBjXK>
+#%% [code]
+px.bar(df,df['sex'],df['target'])
+sns.distplot(df["thal"])
+
+
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7efc95f21710>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <NbPHPTAhCqHq>
+#%% [code]
+sns.distplot(df["chol"])
+Execution output from Jun 24, 2020 1:59 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7efc96825d68>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <HGffuoK_DBit>
+#%% [code]
+sns.pairplot(df,hue='target')
+Execution output from Jun 24, 2020 2:06 AM
+	text/plain
+		<seaborn.axisgrid.PairGrid at 0x7efc95163f98>
+		<Figure size 2382.38x2340 with 182 Axes>
+
+Code cell <9GtUjLIdFWjJ>
+#%% [code]
+df
+Execution output from Jun 24, 2020 2:06 AM
+	text/plain
+		age  sex  cp  trestbps  chol  fbs  ...  exang  oldpeak  slope  ca  thal  target
+		0     63    1   3       145   233    1  ...      0      2.3      0   0     1       1
+		1     37    1   2       130   250    0  ...      0      3.5      0   0     2       1
+		2     41    0   1       130   204    0  ...      0      1.4      2   0     2       1
+		3     56    1   1       120   236    0  ...      0      0.8      2   0     2       1
+		4     57    0   0       120   354    0  ...      1      0.6      2   0     2       1
+		..   ...  ...  ..       ...   ...  ...  ...    ...      ...    ...  ..   ...     ...
+		298   57    0   0       140   241    0  ...      1      0.2      1   0     3       0
+		299   45    1   3       110   264    0  ...      0      1.2      1   0     3       0
+		300   68    1   0       144   193    1  ...      0      3.4      1   2     3       0
+		301   57    1   0       130   131    0  ...      1      1.2      1   1     3       0
+		302   57    0   1       130   236    0  ...      0      0.0      1   1     2       0
+		
+		[303 rows x 14 columns]
+
+Code cell <sApYchkTGQdd>
+#%% [code]
+numeric_columns=['trestbps','chol','thalach','age','oldpeak']
+
+
+
+
+
+
+Code cell <WrUIOAN3GZ9a>
+#%% [code]
+sns.pairplot(df[numeric_columns])
+
+
+Execution output from Jun 24, 2020 2:06 AM
+	text/plain
+		<seaborn.axisgrid.PairGrid at 0x7efc9345b630>
+		<Figure size 900x900 with 30 Axes>
+
+Code cell <yx3Lgk5wj2O4>
+#%% [code]
+df['target']
+Execution output from Jun 24, 2020 2:06 AM
+	text/plain
+		0      1
+		1      1
+		2      1
+		3      1
+		4      1
+		      ..
+		298    0
+		299    0
+		300    0
+		301    0
+		302    0
+		Name: target, Length: 303, dtype: int64
+
+Code cell <_U7SRuVolWTI>
+#%% [code]
+y = df["target"]
+sns.countplot(y)
+target_temp = df.target.value_counts()
+print(target_temp)
+Execution output from Jun 24, 2020 2:09 AM
+	Stream
+		1    165
+		0    138
+		Name: target, dtype: int64
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <QwazYMqal22y>
+#%% [code]
+sns.heatmap(df[numeric_columns].corr(),annot=True, cmap='viridis', linewidths=0.1)
+fig=plt.gcf()
+fig.set_size_inches(8,8)
+plt.show()
+Execution output from Jun 24, 2020 2:19 AM
+	text/plain
+		<Figure size 576x576 with 2 Axes>
+
+Code cell <LqQTRZB-nSK6>
+#%% [code]
+plt.figure(figsize=(12,12))
+plt.subplot(221)
+sns.distplot(df[df['target']==0].age)
+plt.title('Age of patients without heart disease')
+plt.subplot(222)
+sns.distplot(df[df['target']==1].age)
+plt.title('Age of patients with heart disease')
+plt.show()
+Execution output from Jun 24, 2020 2:23 AM
+	text/plain
+		<Figure size 864x864 with 2 Axes>
+
+Code cell <meNef7wRo0Ms>
+#%% [code]
+plt.figure(figsize=(12,12))
+plt.subplot(223)
+sns.distplot(df[df['target']==0].thalach )
+plt.title('Max heart rate of patients without heart disease')
+plt.subplot(224)
+sns.distplot(df[df['target']==1].thalach )
+plt.title('Max heart rate of patients with heart disease')
+plt.show()
+Execution output from Jun 24, 2020 2:24 AM
+	text/plain
+		<Figure size 864x864 with 2 Axes>
+
+Code cell <jTT44UuEpJmB>
+#%% [code]
+plt.figure(figsize=(13,10))
+plt.subplot(121)
+sns.violinplot(x="target", y="thalach", data=df, inner=None)
+sns.swarmplot(x="target", y="thalach", data=df, color='r', alpha=0.5)
+plt.show()
+Execution output from Jun 24, 2020 2:28 AM
+	text/plain
+		<Figure size 936x720 with 1 Axes>
+
+Code cell <CvMuGf-RpooN>
+#%% [code]
+plt.figure(figsize=(13,10))
+plt.subplot(122)
+sns.swarmplot(x="target", y="thalach", data=df)
+plt.show()
+Execution output from Jun 24, 2020 2:28 AM
+	text/plain
+		<Figure size 936x720 with 1 Axes>
+
+Code cell <essuTBkIqIXx>
+#%% [code]
+plt.figure(figsize=(16,8))
+plt.subplot(131)
+sns.pointplot(x="sex", y="target", hue='cp', data=df)
+plt.legend(['male = 1', 'female = 0'])
+plt.show()
+
+
+Execution output from Jun 24, 2020 2:35 AM
+	text/plain
+		<Figure size 1152x576 with 1 Axes>
+
+Code cell <VrdCc2uSrWZS>
+#%% [code]
+plt.figure(figsize=(16,8))
+plt.subplot(132)
+sns.barplot(x="exang", y="target", data=df)
+plt.legend(['yes = 1', 'no = 0'])
+plt.show()
+Execution output from Jun 24, 2020 2:35 AM
+	text/plain
+		<Figure size 1152x576 with 1 Axes>
+
+Code cell <F8fwZ-Nvrger>
+#%% [code]
+plt.figure(figsize=(16,8))
+plt.subplot(133)
+sns.countplot(x="slope", hue='target', data=df)
+plt.show()
+Execution output from Jun 24, 2020 2:35 AM
+	text/plain
+		<Figure size 1152x576 with 1 Axes>
+
+Code cell <SGKc1N0aryqj>
+#%% [code]
+#DATA PREPROCESSING
+
+Code cell <isDtMUfjsIqY>
+#%% [code]
+df['target'].value_counts()
+Execution output from Jun 24, 2020 2:37 AM
+	text/plain
+		1    165
+		0    138
+		Name: target, dtype: int64
+
+Code cell <IiNG96mgsONU>
+#%% [code]
+df['target'].isnull()
+Execution output from Jun 24, 2020 2:39 AM
+	text/plain
+		0      False
+		1      False
+		2      False
+		3      False
+		4      False
+		       ...  
+		298    False
+		299    False
+		300    False
+		301    False
+		302    False
+		Name: target, Length: 303, dtype: bool
+
+Code cell <zp6C7EAXsinU>
+#%% [code]
+df['target'].sum()
+
+
+Execution output from Jun 24, 2020 2:40 AM
+	text/plain
+		165
+
+Code cell <RbI4bOt7s6c3>
+#%% [code]
+df['target'].unique()
+Execution output from Jun 24, 2020 2:41 AM
+	text/plain
+		array([1, 0])
+
+Code cell <6N20FSVys-Y->
+#%% [code]
+df.isnull().sum()
+Execution output from Jun 24, 2020 2:41 AM
+	text/plain
+		age         0
+		sex         0
+		cp          0
+		trestbps    0
+		chol        0
+		fbs         0
+		restecg     0
+		thalach     0
+		exang       0
+		oldpeak     0
+		slope       0
+		ca          0
+		thal        0
+		target      0
+		dtype: int64
+
+Code cell <Vde1m8CptLtT>
+#%% [code]
+#STORING - X and y
+X,y=df.loc[:,:'thal'],df.loc[:,'target']
+
+
+
+Code cell <anb3bB7etrsv>
+#%% [code]
+X
+Execution output from Jun 24, 2020 2:44 AM
+	text/plain
+		age  sex  cp  trestbps  chol  ...  exang  oldpeak  slope  ca  thal
+		0     63    1   3       145   233  ...      0      2.3      0   0     1
+		1     37    1   2       130   250  ...      0      3.5      0   0     2
+		2     41    0   1       130   204  ...      0      1.4      2   0     2
+		3     56    1   1       120   236  ...      0      0.8      2   0     2
+		4     57    0   0       120   354  ...      1      0.6      2   0     2
+		..   ...  ...  ..       ...   ...  ...    ...      ...    ...  ..   ...
+		298   57    0   0       140   241  ...      1      0.2      1   0     3
+		299   45    1   3       110   264  ...      0      1.2      1   0     3
+		300   68    1   0       144   193  ...      0      3.4      1   2     3
+		301   57    1   0       130   131  ...      1      1.2      1   1     3
+		302   57    0   1       130   236  ...      0      0.0      1   1     2
+		
+		[303 rows x 13 columns]
+
+Code cell <-JInbQaLtwUJ>
+#%% [code]
+y
+Execution output from Jun 24, 2020 2:44 AM
+	text/plain
+		0      1
+		1      1
+		2      1
+		3      1
+		4      1
+		      ..
+		298    0
+		299    0
+		300    0
+		301    0
+		302    0
+		Name: target, Length: 303, dtype: int64
+
+Code cell <8bYHJCDet0Yi>
+#%% [code]
+X.shape
+Execution output from Jun 24, 2020 2:47 AM
+	text/plain
+		(303, 13)
+
+Code cell <t5tqo35wuWLA>
+#%% [code]
+y.shape
+Execution output from Jun 24, 2020 2:47 AM
+	text/plain
+		(303,)
+
+Code cell <Q9KOD9iMuZc5>
+#%% [code]
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+
+Code cell <29hmC0Lsuhds>
+#%% [code]
+X=df.drop(['target'],axis=1)
+
+Code cell <T5z008tlunZf>
+#%% [code]
+np.array(X)
+Execution output from Jun 24, 2020 2:48 AM
+	text/plain
+		array([[63.,  1.,  3., ...,  0.,  0.,  1.],
+		       [37.,  1.,  2., ...,  0.,  0.,  2.],
+		       [41.,  0.,  1., ...,  2.,  0.,  2.],
+		       ...,
+		       [68.,  1.,  0., ...,  1.,  2.,  3.],
+		       [57.,  1.,  0., ...,  1.,  1.,  3.],
+		       [57.,  0.,  1., ...,  1.,  1.,  2.]])
+
+Code cell <W223aZZWuyUX>
+#%% [code]
+X
+Execution output from Jun 24, 2020 2:49 AM
+	text/plain
+		age  sex  cp  trestbps  chol  ...  exang  oldpeak  slope  ca  thal
+		0     63    1   3       145   233  ...      0      2.3      0   0     1
+		1     37    1   2       130   250  ...      0      3.5      0   0     2
+		2     41    0   1       130   204  ...      0      1.4      2   0     2
+		3     56    1   1       120   236  ...      0      0.8      2   0     2
+		4     57    0   0       120   354  ...      1      0.6      2   0     2
+		..   ...  ...  ..       ...   ...  ...    ...      ...    ...  ..   ...
+		298   57    0   0       140   241  ...      1      0.2      1   0     3
+		299   45    1   3       110   264  ...      0      1.2      1   0     3
+		300   68    1   0       144   193  ...      0      3.4      1   2     3
+		301   57    1   0       130   131  ...      1      1.2      1   1     3
+		302   57    0   1       130   236  ...      0      0.0      1   1     2
+		
+		[303 rows x 13 columns]
+
+Code cell <UGx-udnbvCzn>
+#%% [code]
+X_train,X_test,y_train,y_test=train_test_split(X,y,random_state=10,test_size=0.2,shuffle=True)
+
+Code cell <B35fRlprvJD4>
+#%% [code]
+X_test
+Execution output from Jun 24, 2020 2:50 AM
+	text/plain
+		age  sex  cp  trestbps  chol  ...  exang  oldpeak  slope  ca  thal
+		246   56    0   0       134   409  ...      1      1.9      1   2     3
+		183   58    1   2       112   230  ...      0      2.5      1   1     3
+		229   64    1   2       125   309  ...      1      1.8      1   0     3
+		126   47    1   0       112   204  ...      0      0.1      2   0     2
+		184   50    1   0       150   243  ...      0      2.6      1   0     3
+		..   ...  ...  ..       ...   ...  ...    ...      ...    ...  ..   ...
+		277   57    1   1       124   261  ...      0      0.3      2   0     3
+		121   59    1   0       138   271  ...      0      0.0      2   0     2
+		187   54    1   0       124   266  ...      1      2.2      1   1     3
+		301   57    1   0       130   131  ...      1      1.2      1   1     3
+		283   40    1   0       152   223  ...      0      0.0      2   0     3
+		
+		[61 rows x 13 columns]
+
+Code cell <BEE1Z9DuvV_i>
+#%% [code]
+y_test
+Execution output from Jun 24, 2020 2:51 AM
+	text/plain
+		246    0
+		183    0
+		229    0
+		126    1
+		184    0
+		      ..
+		277    0
+		121    1
+		187    0
+		301    0
+		283    0
+		Name: target, Length: 61, dtype: int64
+
+Code cell <JaQ9Dj-1vbWz>
+#%% [code]
+X_train.shape
+Execution output from Jun 24, 2020 2:53 AM
+	text/plain
+		(242, 13)
+
+Code cell <nEN89nncv4Bn>
+#%% [code]
+X_test.shape
+Execution output from Jun 24, 2020 2:54 AM
+	text/plain
+		(61, 13)
+
+Code cell <G5LYDCumwDJ5>
+#%% [code]
+y_train.shape
+Execution output from Jun 24, 2020 2:54 AM
+	text/plain
+		(242,)
+
+Code cell <iUlR3jbEwIX1>
+#%% [code]
+y_test.shape
+Execution output from Jun 24, 2020 2:55 AM
+	text/plain
+		(61,)
+
+Code cell <MqxYtoRFwPM->
+#%% [code]
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+
+dt=DecisionTreeClassifier()
+dt.fit(X_train,y_train)
+Execution output from Jun 24, 2020 3:04 AM
+	text/plain
+		DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',
+		                       max_depth=None, max_features=None, max_leaf_nodes=None,
+		                       min_impurity_decrease=0.0, min_impurity_split=None,
+		                       min_samples_leaf=1, min_samples_split=2,
+		                       min_weight_fraction_leaf=0.0, presort='deprecated',
+		                       random_state=None, splitter='best')
+
+Code cell <TLYmAA1Fwa6Y>
+#%% [code]
+y_prediction=dt.predict(X_test)
+
+
+
+Code cell <paDP2O60xefL>
+#%% [code]
+accuracy_dt=accuracy_score (y_test,y_prediction)
+accuracy_dt
+Execution output from Jun 24, 2020 3:05 AM
+	text/plain
+		0.7213114754098361
+
+Code cell <3Aium10_yx4p>
+#%% [code]
+dt.score(X_train, y_train)
+Execution output from Jun 24, 2020 3:06 AM
+	text/plain
+		1.0
+
+Code cell <6ELqwH4Iy2Sf>
+#%% [code]
+dt.score(X_test, y_test)
+Execution output from Jun 24, 2020 3:07 AM
+	text/plain
+		0.7213114754098361
+
+Code cell <qf2Hct7vy7XQ>
+#%% [code]
+y_test
+Execution output from Jun 24, 2020 3:09 AM
+	text/plain
+		246    0
+		183    0
+		229    0
+		126    1
+		184    0
+		      ..
+		277    0
+		121    1
+		187    0
+		301    0
+		283    0
+		Name: target, Length: 61, dtype: int64
+
+Code cell <ofiPzEVszXmx>
+#%% [code]
+y_prediction
+Execution output from Jun 24, 2020 3:09 AM
+	text/plain
+		array([1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1,
+		       1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0,
+		       1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1])
+
+Code cell <w0w4vKsrzb5k>
+#%% [code]
+X_DT=np.array([[63 ,1, 3,145,233,1,0,150,0,2.3,0,0,1]])
+X_DT_prediction=dt.predict(X_DT)
+
+
+Code cell <wFiKhhgdzpkm>
+#%% [code]
+X_DT_prediction[0]
+Execution output from Jun 24, 2020 3:10 AM
+	text/plain
+		1
+
+Code cell <KyVlFhYn0rpT>
+#%% [code]
+dt.feature_importances_
+Execution output from Jun 24, 2020 3:15 AM
+	text/plain
+		array([0.03263864, 0.02262982, 0.29176503, 0.11574518, 0.06610428,
+		       0.        , 0.        , 0.08797441, 0.06558357, 0.10582972,
+		       0.04826333, 0.163466  , 0.        ])
+
+Code cell <GDrMXKNi07pd>
+#%% [code]
+def plot_feature_importances_diabetes(model):
+    plt.figure(figsize=(8,6))
+    n_features = 13
+    plt.barh(range(n_features), model.feature_importances_, align='center')
+    plt.yticks(np.arange(n_features), X)
+    plt.xlabel("FEATURE IMPORTANCES")
+    plt.ylabel("FEATURE")
+    plt.ylim(-1, n_features)
+plot_feature_importances_diabetes(dt)
+plt.savefig('feature_importance')
+Execution output from Jun 24, 2020 3:25 AM
+	text/plain
+		<Figure size 576x432 with 1 Axes>
+
+Code cell <GPyQRweM20x7>
+#%% [code]
+sc=StandardScaler().fit(X_train)
+X_train_std=sc.transform(X_train)
+X_test_std=sc.transform(X_test)
+
+
+Code cell <djnQIFtV3S4k>
+#%% [code]
+X_test_std
+Execution output from Jun 24, 2020 3:26 AM
+	text/plain
+		array([[ 0.18733254, -1.37147817, -0.96052267,  0.15197298,  3.06663801,
+		        -0.43159531, -1.01054031, -0.01372906,  1.50674161,  0.7957577 ,
+		        -0.63678177,  1.30209953,  1.19898626],
+		       [ 0.40633967,  0.72914029,  0.97653138, -1.06472495, -0.33003859,
+		        -0.43159531, -1.01054031,  0.6507574 , -0.6636838 ,  1.31881798,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [ 1.06336104,  0.72914029,  0.97653138, -0.34576709,  1.16905332,
+		        -0.43159531,  0.90001247, -0.85541191,  1.50674161,  0.70858098,
+		        -0.63678177, -0.69225545,  1.19898626],
+		       [-0.79819952,  0.72914029, -0.96052267, -1.06472495, -0.82341062,
+		        -0.43159531,  0.90001247, -0.32382274, -0.6636838 , -0.77342317,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [-0.46968884,  0.72914029, -0.96052267,  1.03684419, -0.08335258,
+		        -0.43159531, -1.01054031, -0.9883092 , -0.6636838 ,  1.4059947 ,
+		        -0.63678177, -0.69225545,  1.19898626],
+		       [-1.89323515,  0.72914029,  0.97653138, -0.06924483,  0.04947834,
+		        -0.43159531,  0.90001247,  1.62533754, -0.6636838 ,  2.19058513,
+		        -2.24200249, -0.69225545, -0.43109618],
+		       [ 0.2968361 , -1.37147817, -0.96052267, -0.17985373,  1.05519823,
+		        -0.43159531, -1.01054031,  0.38496282, -0.6636838 , -0.86059988,
+		         0.96843894,  0.30492204, -0.43109618],
+		       [ 0.62534679,  0.72914029,  0.97653138,  0.48379968, -1.18395171,
+		        -0.43159531, -1.01054031,  0.20776643, -0.6636838 ,  1.75470155,
+		        -0.63678177, -0.69225545, -0.43109618],
+		       [-1.34571734,  0.72914029,  0.00800436, -0.62228934,  0.90339146,
+		        -0.43159531,  0.90001247,  0.51786011, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [-1.56472446,  0.72914029, -0.96052267, -1.17533385, -1.52551695,
+		        -0.43159531, -1.01054031, -1.60849656,  1.50674161,  0.88293441,
+		        -0.63678177, -0.69225545,  1.19898626],
+		       [-1.4552209 ,  0.72914029,  0.00800436, -0.62228934, -1.71527542,
+		        -0.43159531,  0.90001247,  1.40384205, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [ 1.17286461, -1.37147817, -0.96052267,  1.03684419, -0.42491783,
+		        -0.43159531, -1.01054031, -1.60849656, -0.6636838 ,  0.01116727,
+		        -0.63678177,  2.29927702,  1.19898626],
+		       [ 0.95385748, -1.37147817, -0.96052267, -0.40107154, -0.95624154,
+		        -0.43159531,  0.90001247, -0.63391642,  1.50674161, -0.86059988,
+		        -0.63678177, -0.69225545, -0.43109618],
+		       [-1.78373159,  0.72914029,  0.97653138,  0.37319078, -1.37371018,
+		        -0.43159531,  0.90001247,  1.00515018, -0.6636838 , -0.86059988,
+		         0.96843894,  3.29645451, -0.43109618],
+		       [-0.68869596,  0.72914029, -0.96052267, -0.06924483,  0.16333343,
+		         2.31698534, -1.01054031, -0.01372906,  1.50674161, -0.86059988,
+		         0.96843894,  1.30209953,  1.19898626],
+		       [-0.25068171,  0.72914029,  0.97653138,  0.37319078, -0.46286952,
+		        -0.43159531,  0.90001247,  0.82795379, -0.6636838 , -0.86059988,
+		         0.96843894,  3.29645451, -0.43109618],
+		       [ 0.51584323,  0.72914029, -0.96052267,  2.14293322,  1.49164271,
+		        -0.43159531, -1.01054031, -0.45672003,  1.50674161,  2.10340841,
+		        -2.24200249, -0.69225545,  1.19898626],
+		       [ 0.84435392,  0.72914029, -0.96052267, -0.62228934,  0.37206774,
+		        -0.43159531,  0.90001247, -2.27298302,  1.50674161,  0.70858098,
+		        -0.63678177,  1.30209953,  1.19898626],
+		       [-1.56472446,  0.72914029,  1.9450584 ,  0.48379968, -0.91828985,
+		        -0.43159531,  0.90001247,  1.22664566,  1.50674161,  0.35987412,
+		         0.96843894, -0.69225545,  1.19898626],
+		       [ 1.61087886,  0.72914029,  0.97653138,  0.48379968,  0.12538173,
+		        -0.43159531, -1.01054031, -0.19092545, -0.6636838 ,  0.88293441,
+		        -0.63678177,  2.29927702,  1.19898626],
+		       [ 1.06336104,  0.72914029, -0.96052267, -0.17985373,  0.29616436,
+		        -0.43159531,  0.90001247, -2.00718844,  1.50674161, -0.68624645,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [ 0.51584323,  0.72914029,  0.97653138,  1.03684419, -0.67160384,
+		         2.31698534,  0.90001247,  0.29636462, -0.6636838 ,  0.53422755,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [ 0.2968361 ,  0.72914029,  0.00800436,  1.258062  , -0.2920869 ,
+		        -0.43159531, -1.01054031,  0.6064583 , -0.6636838 , -0.86059988,
+		         0.96843894,  0.30492204, -0.43109618],
+		       [ 0.40633967,  0.72914029,  0.97653138,  0.48379968, -0.69057969,
+		         2.31698534, -1.01054031,  0.6507574 , -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [ 0.40633967,  0.72914029, -0.96052267,  1.03684419,  0.42899528,
+		        -0.43159531, -1.01054031, -1.74139385,  1.50674161, -0.16318616,
+		         0.96843894, -0.69225545,  1.19898626],
+		       [ 1.72038242,  0.72914029,  0.97653138,  1.58988871,  0.41001944,
+		        -0.43159531,  0.90001247, -1.69709475,  1.50674161,  1.66752484,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [-0.90770309,  0.72914029, -0.96052267,  0.48379968,  1.20700501,
+		        -0.43159531,  0.90001247, -1.34270198,  1.50674161,  0.70858098,
+		        -0.63678177,  1.30209953,  1.19898626],
+		       [ 0.62534679,  0.72914029, -0.96052267, -0.06924483,  0.10640589,
+		        -0.43159531,  0.90001247, -0.27952364,  1.50674161,  0.35987412,
+		         0.96843894,  0.30492204,  1.19898626],
+		       [ 1.39187173, -1.37147817,  0.97653138,  1.1474531 ,  0.56182621,
+		        -0.43159531,  0.90001247,  0.96085108, -0.6636838 , -0.86059988,
+		         0.96843894,  0.30492204, -0.43109618],
+		       [ 0.40633967,  0.72914029, -0.96052267, -0.17985373, -0.59570045,
+		        -0.43159531, -1.01054031, -0.85541191,  1.50674161,  1.05728784,
+		        -0.63678177,  2.29927702,  1.19898626],
+		       [-0.79819952,  0.72914029,  0.97653138,  0.37319078,  0.18230927,
+		        -0.43159531, -1.01054031,  0.25206552, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [ 0.84435392,  0.72914029,  0.97653138, -0.06924483, -0.31106275,
+		        -0.43159531,  0.90001247, -0.19092545, -0.6636838 ,  0.70858098,
+		        -0.63678177,  2.29927702,  1.19898626],
+		       [ 0.73485036,  0.72914029, -0.96052267,  0.37319078, -1.5444928 ,
+		        -0.43159531, -1.01054031, -1.12120649,  1.50674161,  2.27776184,
+		        -0.63678177,  0.30492204, -0.43109618],
+		       [ 0.2968361 ,  0.72914029, -0.96052267, -1.17533385, -0.88033816,
+		        -0.43159531,  0.90001247, -1.07690739,  1.50674161,  0.44705084,
+		        -0.63678177, -0.69225545, -2.06117863],
+		       [ 0.62534679,  0.72914029, -0.96052267,  0.76032194,  0.65670545,
+		        -0.43159531, -1.01054031, -0.36812184,  1.50674161,  1.58034813,
+		        -0.63678177,  1.30209953,  1.19898626],
+		       [ 0.62534679, -1.37147817, -0.96052267,  1.03684419,  0.20128512,
+		        -0.43159531, -1.01054031,  0.29636462, -0.6636838 ,  1.4059947 ,
+		        -0.63678177,  1.30209953,  1.19898626],
+		       [ 1.82988598, -1.37147817,  0.00800436,  1.58988871,  1.03622239,
+		        -0.43159531,  0.90001247,  0.51786011, -0.6636838 , -0.51189302,
+		         0.96843894,  1.30209953, -0.43109618],
+		       [-0.90770309,  0.72914029, -0.96052267, -0.62228934,  0.0305025 ,
+		        -0.43159531, -1.01054031, -0.27952364, -0.6636838 , -0.16318616,
+		         0.96843894, -0.69225545,  1.19898626],
+		       [ 1.5013753 , -1.37147817,  0.97653138, -0.62228934, -0.69057969,
+		        -0.43159531, -1.01054031, -1.56419746, -0.6636838 ,  0.44705084,
+		        -0.63678177, -0.69225545, -0.43109618],
+		       [-0.03167458,  0.72914029, -0.96052267, -1.17533385, -0.78545892,
+		        -0.43159531, -1.01054031, -1.87429114,  1.50674161, -0.86059988,
+		        -0.63678177,  0.30492204, -0.43109618],
+		       [ 0.07782898, -1.37147817, -0.96052267, -0.17985373, -0.80443477,
+		        -0.43159531,  2.81056524, -0.899711  ,  1.50674161,  0.88293441,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [-0.14117815,  0.72914029, -0.96052267,  0.48379968, -0.84238646,
+		         2.31698534, -1.01054031,  0.20776643,  1.50674161,  1.84187827,
+		        -2.24200249, -0.69225545,  1.19898626],
+		       [-0.14117815, -1.37147817, -0.96052267, -0.06924483,  0.3151402 ,
+		        -0.43159531, -1.01054031, -0.32382274, -0.6636838 , -0.51189302,
+		        -0.63678177, -0.69225545, -0.43109618],
+		       [-0.46968884,  0.72914029,  0.97653138,  0.48379968, -0.27311105,
+		        -0.43159531,  0.90001247,  0.56215921, -0.6636838 , -0.33753959,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [-1.4552209 ,  0.72914029,  0.97653138, -1.06472495,  0.04947834,
+		        -0.43159531,  0.90001247,  1.27094476, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [ 0.40633967,  0.72914029, -0.96052267, -1.72837836, -0.25413521,
+		        -0.43159531,  0.90001247,  0.25206552, -0.6636838 , -0.77342317,
+		         0.96843894,  0.30492204,  1.19898626],
+		       [-1.78373159,  0.72914029,  1.9450584 , -0.62228934, -0.31106275,
+		        -0.43159531,  0.90001247,  1.40384205,  1.50674161,  2.45211527,
+		        -0.63678177, -0.69225545,  1.19898626],
+		       [-0.68869596,  0.72914029, -0.96052267, -0.51168044, -0.48184537,
+		        -0.43159531, -1.01054031,  1.58103844, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [-1.23621378,  0.72914029,  0.97653138, -0.06924483,  1.2829084 ,
+		        -0.43159531,  0.90001247,  0.51786011, -0.6636838 ,  0.7957577 ,
+		         0.96843894,  0.30492204, -0.43109618],
+		       [ 1.61087886,  0.72914029,  1.9450584 ,  1.58988871, -0.25413521,
+		         2.31698534, -1.01054031, -0.85541191, -0.6636838 , -0.77342317,
+		        -0.63678177,  0.30492204, -0.43109618],
+		       [ 0.40633967,  0.72914029,  0.97653138,  0.04136407, -0.44389368,
+		        -0.43159531, -1.01054031,  1.00515018, -0.6636838 ,  1.92905498,
+		         0.96843894,  1.30209953,  1.19898626],
+		       [-0.90770309,  0.72914029,  0.00800436, -1.67307391, -0.95624154,
+		         2.31698534,  0.90001247,  0.25206552, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545,  1.19898626],
+		       [ 0.18733254,  0.72914029, -0.96052267,  0.04136407, -1.20292755,
+		        -0.43159531, -1.01054031, -2.00718844,  1.50674161,  0.97011112,
+		        -0.63678177,  0.30492204, -2.06117863],
+		       [ 0.73485036, -1.37147817, -0.96052267,  0.76032194,  1.13110162,
+		        -0.43159531, -1.01054031, -0.19092545,  1.50674161,  0.01116727,
+		        -0.63678177, -0.69225545,  1.19898626],
+		       [-0.03167458, -1.37147817,  0.97653138,  0.20727743,  1.07417408,
+		         2.31698534,  0.90001247,  0.87225289, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [-0.03167458,  0.72914029, -0.96052267,  0.48379968, -0.15925597,
+		        -0.43159531,  0.90001247,  0.42926191, -0.6636838 ,  0.18552069,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [ 0.2968361 ,  0.72914029,  0.00800436, -0.40107154,  0.25821266,
+		        -0.43159531,  0.90001247, -0.41242093, -0.6636838 , -0.59906974,
+		         0.96843894, -0.69225545,  1.19898626],
+		       [ 0.51584323,  0.72914029, -0.96052267,  0.37319078,  0.44797113,
+		        -0.43159531, -1.01054031,  1.40384205, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545, -0.43109618],
+		       [-0.03167458,  0.72914029, -0.96052267, -0.40107154,  0.3530919 ,
+		        -0.43159531, -1.01054031, -1.82999205,  1.50674161,  1.05728784,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [ 0.2968361 ,  0.72914029, -0.96052267, -0.06924483, -2.20864744,
+		        -0.43159531,  0.90001247, -1.56419746,  1.50674161,  0.18552069,
+		        -0.63678177,  0.30492204,  1.19898626],
+		       [-1.56472446,  0.72914029, -0.96052267,  1.1474531 , -0.46286952,
+		        -0.43159531,  0.90001247,  1.35954296, -0.6636838 , -0.86059988,
+		         0.96843894, -0.69225545,  1.19898626]])
+
+Code cell <N3KJJCe53lT->
+#%% [code]
+from sklearn.neighbors import KNeighborsClassifier
+
+knn=KNeighborsClassifier(n_neighbors=4)
+knn.fit(X_train_std,y_train)
+Execution output from Jun 24, 2020 3:35 AM
+	text/plain
+		KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+		                     metric_params=None, n_jobs=None, n_neighbors=4, p=2,
+		                     weights='uniform')
+
+Code cell <mI1ODiV15aQE>
+#%% [code]
+prediction_knn=knn.predict(X_test_std)
+accuracy_knn=accuracy_score(y_test,prediction_knn)
+
+Code cell <OBDt1uI95mYL>
+#%% [code]
+accuracy_knn
+Execution output from Jun 24, 2020 3:36 AM
+	text/plain
+		0.819672131147541
+
+Code cell <htX_8ddZ50m2>
+#%% [code]
+knn.score(X_train, y_train)
+Execution output from Jun 24, 2020 3:37 AM
+	text/plain
+		0.3884297520661157
+
+Code cell <P03EChAn53Qk>
+#%% [code]
+knn.score(X_test, y_test)
+Execution output from Jun 24, 2020 3:37 AM
+	text/plain
+		0.5409836065573771
+
+Code cell <hRuQcx3w59dK>
+#%% [code]
+k_range=range(1,26)
+scores={}
+scores_list=[]
+
+for k in k_range:
+    knn=KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train_std,y_train)
+    prediction_knn=knn.predict(X_test_std)
+    scores[k]=accuracy_score(y_test,prediction_knn)
+    scores_list.append(accuracy_score(y_test,prediction_knn))
+
+Code cell <OKz_xk276TCC>
+#%% [code]
+scores
+Execution output from Jun 24, 2020 3:39 AM
+	text/plain
+		{1: 0.7704918032786885,
+		 2: 0.7704918032786885,
+		 3: 0.8032786885245902,
+		 4: 0.819672131147541,
+		 5: 0.8524590163934426,
+		 6: 0.8524590163934426,
+		 7: 0.8032786885245902,
+		 8: 0.7868852459016393,
+		 9: 0.7868852459016393,
+		 10: 0.819672131147541,
+		 11: 0.8032786885245902,
+		 12: 0.819672131147541,
+		 13: 0.819672131147541,
+		 14: 0.8360655737704918,
+		 15: 0.7868852459016393,
+		 16: 0.8032786885245902,
+		 17: 0.8032786885245902,
+		 18: 0.8032786885245902,
+		 19: 0.8032786885245902,
+		 20: 0.8032786885245902,
+		 21: 0.8032786885245902,
+		 22: 0.819672131147541,
+		 23: 0.8032786885245902,
+		 24: 0.819672131147541,
+		 25: 0.8032786885245902}
+
+Code cell <_Q48_jvb6XkW>
+#%% [code]
+plt.plot(k_range,scores_list)
+Execution output from Jun 24, 2020 3:40 AM
+	text/plain
+		[<matplotlib.lines.Line2D at 0x7efc866427b8>]
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <0dHFKsIw7Jy3>
+#%% [code]
+X_knn=np.array([[63 ,1, 3,145,233,1,0,150,0,2.3,0,0,1]])
+X_knn_std=sc.transform(X_knn)
+X_knn_prediction=dt.predict(X_knn)
+
+
+Code cell <iJ44A2R57Ntw>
+#%% [code]
+X_knn_std
+Execution output from Jun 24, 2020 3:43 AM
+	text/plain
+		array([[ 0.95385748,  0.72914029,  1.9450584 ,  0.76032194, -0.27311105,
+		         2.31698534, -1.01054031, -0.01372906, -0.6636838 ,  1.14446455,
+		        -2.24200249, -0.69225545, -2.06117863]])
+
+Code cell <j04_LnFD7Wjw>
+#%% [code]
+(X_knn_prediction[0])
+Execution output from Jun 24, 2020 3:44 AM
+	text/plain
+		1
+
+Code cell <xFdjVWYE7xwz>
+#%% [code]
+algorithms=['Decision Tree','KNN']
+scores=[accuracy_dt,accuracy_knn]
+
+
+Code cell <eR6KyAaD8H0q>
+#%% [code]
+sns.set(rc={'figure.figsize':(10,7)})
+plt.xlabel("Algorithms")
+plt.ylabel("Accuracy score")
+
+sns.barplot(algorithms,scores)
+Execution output from Jun 24, 2020 3:52 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7efc85fe2da0>
+		<Figure size 720x504 with 1 Axes>
+
+
