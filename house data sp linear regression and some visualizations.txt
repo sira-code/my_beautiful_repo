@@ -1,0 +1,541 @@
+#IMPORTING THE LIBRARIES
+
+Code cell <uXO1tQHrQHjN>
+#%% [code]
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import cufflinks as cf
+init_notebook_mode(connected=True)
+cf.go_offline()
+Execution output from Jun 27, 2020 10:54 AM
+	Stream
+		/usr/local/lib/python3.6/dist-packages/statsmodels/tools/_testing.py:19: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
+		  import pandas.util.testing as tm
+
+Code cell <kuAJpGV3YFbP>
+#%% [code]
+import mpl_toolkits
+
+
+Code cell <0u5Rra7gQVT_>
+#%% [code]
+#READING AND ANALYSING THE DATASET
+
+Code cell <V-1-Ls2eYQL_>
+#%% [code]
+df = pd.read_csv('house_data.csv')
+df.head()
+Execution output from Jun 27, 2020 10:54 AM
+	text/plain
+		id             date     price  ...     long  sqft_living15  sqft_lot15
+		0  7129300520  20141013T000000  221900.0  ... -122.257           1340        5650
+		1  6414100192  20141209T000000  538000.0  ... -122.319           1690        7639
+		2  5631500400  20150225T000000  180000.0  ... -122.233           2720        8062
+		3  2487200875  20141209T000000  604000.0  ... -122.393           1360        5000
+		4  1954400510  20150218T000000  510000.0  ... -122.045           1800        7503
+		
+		[5 rows x 21 columns]
+
+Code cell <9zUKKtYoRMoI>
+#%% [code]
+#REMOVING UNNECESSARY FEATURES
+
+Code cell <3XEhhDaqRhaF>
+#%% [code]
+df=df.drop(columns=['waterfront','view','id'])
+
+
+Code cell <6BG7UIA0VlaM>
+#%% [code]
+df.head()
+Execution output from Jun 27, 2020 10:55 AM
+	text/plain
+		date     price  bedrooms  ...     long  sqft_living15  sqft_lot15
+		0  20141013T000000  221900.0         3  ... -122.257           1340        5650
+		1  20141209T000000  538000.0         3  ... -122.319           1690        7639
+		2  20150225T000000  180000.0         2  ... -122.233           2720        8062
+		3  20141209T000000  604000.0         4  ... -122.393           1360        5000
+		4  20150218T000000  510000.0         3  ... -122.045           1800        7503
+		
+		[5 rows x 18 columns]
+
+Code cell <IWoeAyXdYdNY>
+#%% [code]
+df.describe()
+Execution output from Jun 27, 2020 10:55 AM
+	text/plain
+		price      bedrooms  ...  sqft_living15     sqft_lot15
+		count  2.161300e+04  21613.000000  ...   21613.000000   21613.000000
+		mean   5.400881e+05      3.370842  ...    1986.552492   12768.455652
+		std    3.671272e+05      0.930062  ...     685.391304   27304.179631
+		min    7.500000e+04      0.000000  ...     399.000000     651.000000
+		25%    3.219500e+05      3.000000  ...    1490.000000    5100.000000
+		50%    4.500000e+05      3.000000  ...    1840.000000    7620.000000
+		75%    6.450000e+05      4.000000  ...    2360.000000   10083.000000
+		max    7.700000e+06     33.000000  ...    6210.000000  871200.000000
+		
+		[8 rows x 17 columns]
+
+Code cell <w3gfyv9DYmeW>
+#%% [code]
+df['bedrooms'].value_counts().plot(kind='bar')
+plt.title('NO OF BEDROOMS')
+plt.xlabel('BEDROOMS')
+plt.ylabel('COUNT')
+plt.show()
+Execution output from Jun 27, 2020 10:55 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <7IkGynXnZtQJ>
+#%% [code]
+plt.figure(figsize=(15,10))
+sns.jointplot(x = df.lat.values, y = df.long.values,size = 10)
+plt.xlabel('LATITUDE')
+plt.ylabel('LONGITUDE')
+plt.show()
+
+Execution output from Jun 27, 2020 10:55 AM
+	Stream
+		/usr/local/lib/python3.6/dist-packages/seaborn/axisgrid.py:2264: UserWarning:
+		
+		The `size` parameter has been renamed to `height`; please update your code.
+	text/plain
+		<Figure size 1080x720 with 0 Axes>
+		<Figure size 720x720 with 3 Axes>
+
+Code cell <q9vb2IrrbBrm>
+#%% [code]
+plt.scatter(df.sqft_living,df.price, color='red')
+plt.title('SQUARE FEET VS PRICE')
+plt.show()
+
+Execution output from Jun 27, 2020 10:56 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <-lII3p07YRia>
+#%% [code]
+sns.jointplot(x='sqft_living',y='price',data=df)
+plt.savefig("jpl")
+Execution output from Jun 27, 2020 10:56 AM
+	text/plain
+		<Figure size 432x432 with 3 Axes>
+
+Code cell <M5YEq6HpZMHd>
+#%% [code]
+sns.jointplot(x='sqft_above',y='price',data=df,color='red')
+Execution output from Jun 27, 2020 10:56 AM
+	text/plain
+		<seaborn.axisgrid.JointGrid at 0x7f65b2a4a128>
+		<Figure size 432x432 with 3 Axes>
+
+Code cell <5teJfG8pZY8I>
+#%% [code]
+sns.jointplot(x='sqft_basement',y='price',data=df,color='green')
+Execution output from Jun 27, 2020 10:56 AM
+	text/plain
+		<seaborn.axisgrid.JointGrid at 0x7f65b2804eb8>
+		<Figure size 432x432 with 3 Axes>
+
+Code cell <v-GxOXRdbNbO>
+#%% [code]
+df.yr_built
+Execution output from Jun 27, 2020 10:56 AM
+	text/plain
+		0        1955
+		1        1951
+		2        1933
+		3        1965
+		4        1987
+		         ... 
+		21608    2009
+		21609    2014
+		21610    2009
+		21611    2004
+		21612    2008
+		Name: yr_built, Length: 21613, dtype: int64
+
+Code cell <dN4Vv2sWZsdj>
+#%% [code]
+plt.hist(['yr_built'],histtype='bar' ,rwidth=0.8)
+plt.show()
+Execution output from Jun 27, 2020 10:56 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <pZqFVnhCcepv>
+#%% [code]
+plt.scatter(df.lat,df.price, color='red')
+plt.xlabel('latitude')
+plt.ylabel('price')
+plt.title('LATITUDE VS PRICE')
+plt.show()
+Execution output from Jun 27, 2020 10:57 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <3TgXvfhCdRMb>
+#%% [code]
+plt.scatter(df.long,df.price, color='red')
+plt.xlabel('longitude')
+plt.ylabel('price')
+plt.title('LONGITUDE VS PRICE')
+plt.show()
+Execution output from Jun 27, 2020 10:57 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <VI6ry3LQdavm>
+#%% [code]
+plt.scatter(df.bedrooms,df.price, color='red')
+plt.xlabel('bedrooms')
+plt.ylabel('price')
+plt.title('BEDROOMS VS PRICE')
+plt.show()
+Execution output from Jun 27, 2020 10:57 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <i1AAEoFidwnH>
+#%% [code]
+plt.scatter((df['sqft_living']+df['sqft_basement']),df['price'])
+plt.xlabel('sqft info')
+plt.ylabel('price')
+plt.title('SQFT INFO VS PRICE')
+plt.show()
+Execution output from Jun 27, 2020 10:57 AM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <_AL46YZwWntO>
+#%% [code]
+# VISUALIZATIONS
+# HEATMAP FOR CORRELATION ANALYSIS
+
+Code cell <n1iznlh_XLr5>
+#%% [code]
+plt.figure(figsize=(15,15))
+sns.heatmap(df.corr(),annot=True,cmap='coolwarm')
+plt.savefig('heatmap.png')
+Execution output from Jun 27, 2020 10:57 AM
+	text/plain
+		<Figure size 1080x1080 with 2 Axes>
+
+Code cell <t_K8aJcqXy7->
+#%% [code]
+plt.figure(figsize=(10,5))
+sns.barplot(x='bedrooms',y='price',data=df)
+plt.title(" BARPLOT BETWEEN NUMBER OF BEDROOMS AND PRICES")
+plt.show()
+Execution output from Jun 27, 2020 11:06 AM
+	text/plain
+		<Figure size 720x360 with 1 Axes>
+
+Code cell <ShI3FSxA_NnB>
+#%% [code]
+df['bedrooms'].value_counts()
+Execution output from Jun 27, 2020 11:16 AM
+	text/plain
+		3     9824
+		4     6882
+		2     2760
+		5     1601
+		6      272
+		1      199
+		7       38
+		8       13
+		0       13
+		9        6
+		10       3
+		11       1
+		33       1
+		Name: bedrooms, dtype: int64
+
+Code cell <jHfi1QcN-imk>
+#%% [code]
+plt.figure(figsize=(10,5))
+sns.countplot(data=df,x='bedrooms',palette='rainbow')
+plt.title(" COUNTPLOT OF NUMBER OF OF BEDROOMS")
+#plt.tight_layout()
+plt.savefig("countplot")
+Execution output from Jun 27, 2020 11:20 AM
+	text/plain
+		<Figure size 720x360 with 1 Axes>
+
+Code cell <1ylgC9X5AFOW>
+#%% [code]
+plt.figure(figsize=(15,5))
+sns.lmplot(x='bathrooms',y='sqft_above',data=df,hue='grade')
+plt.title("LINEAR MODEL PLOT BETWEEN NUMBER OF BATHROOMS AND SQUARE FEET OF AREA ABOVE BASEMENT, BASED ON THE GRADE OF THE HOUSE")
+#plt.tight_layout()
+plt.savefig("lm1")
+Execution output from Jun 27, 2020 11:27 AM
+	text/plain
+		<Figure size 1080x360 with 0 Axes>
+		<Figure size 408.75x360 with 1 Axes>
+
+Code cell <SS0POH43Cd-2>
+#%% [code]
+plt.figure(figsize=(15,5))
+sns.lmplot(x='sqft_living',y='price',data=df,hue='condition')
+plt.title(" LINEAR MODEL PLOT BETWEEN AREA OF THE HOUSE IN SQUARE FEET VERSUS PRICE, BASED ON THE CONDITION OF THE HOUSE")
+#plt.tight_layout()
+plt.savefig("lm2")
+Execution output from Jun 27, 2020 11:32 AM
+	text/plain
+		<Figure size 1080x360 with 0 Axes>
+		<Figure size 414.25x360 with 1 Axes>
+
+Code cell <Wn6w-LrTDsf1>
+#%% [code]
+sns.barplot(x='condition',y='price',data=df)
+plt.title("BARPLOT OF CONDITION VERSUS PRICE")
+Execution output from Jun 27, 2020 11:37 AM
+	text/plain
+		Text(0.5, 1.0, 'BARPLOT OF CONDITION VERSUS PRICE')
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <CecDD6_GEoQj>
+#%% [code]
+plt.figure(figsize=(10,4))
+sns.distplot(df['price'],bins=30,color='red')
+plt.title("NORMAL DISTRIBUTION OF PRICES")
+Execution output from Jun 27, 2020 11:43 AM
+	text/plain
+		Text(0.5, 1.0, 'NORMAL DISTRIBUTION OF PRICES')
+		<Figure size 720x288 with 1 Axes>
+
+Code cell <Pr7Ki1jDF81J>
+#%% [code]
+plt.figure(figsize=(10,4))
+sns.distplot(df['price'],bins=30,color='red',hist_kws=dict(edgecolor="g", linewidth=2))
+plt.title("NORMAL DISTRIBUTION OF PRICES")
+Execution output from Jun 27, 2020 11:45 AM
+	text/plain
+		Text(0.5, 1.0, 'NORMAL DISTRIBUTION OF PRICES')
+		<Figure size 720x288 with 1 Axes>
+
+Code cell <Gld0wIzkgoMC>
+#%% [code]
+df.floors.value_counts()
+Execution output from Jun 27, 2020 11:45 AM
+	text/plain
+		1.0    10680
+		2.0     8241
+		1.5     1910
+		3.0      613
+		2.5      161
+		3.5        8
+		Name: floors, dtype: int64
+
+Code cell <1Plf9CqnhHep>
+#%% [code]
+df.floors.value_counts().plot(kind='bar')
+Execution output from Jun 27, 2020 11:45 AM
+	text/plain
+		<matplotlib.axes._subplots.AxesSubplot at 0x7f65aeffbcc0>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <GPcI0Sb7inKL>
+#%% [code]
+df.floors
+Execution output from Jun 27, 2020 11:46 AM
+	text/plain
+		0        1.0
+		1        2.0
+		2        1.0
+		3        1.0
+		4        1.0
+		        ... 
+		21608    3.0
+		21609    2.0
+		21610    2.0
+		21611    2.0
+		21612    2.0
+		Name: floors, Length: 21613, dtype: float64
+
+Code cell <QLEBMUmPhmid>
+#%% [code]
+plt.scatter(df.floors,df.price,color ='green')
+Execution output from Jun 27, 2020 11:46 AM
+	text/plain
+		<matplotlib.collections.PathCollection at 0x7f65aee6a198>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <8jbcZC5mi2xv>
+#%% [code]
+plt.scatter(df.condition,df.price,color ='green')
+Execution output from Jun 27, 2020 11:46 AM
+	text/plain
+		<matplotlib.collections.PathCollection at 0x7f65aee4ab38>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <OrDEUnC3jlJP>
+#%% [code]
+df.zipcode
+Execution output from Jun 27, 2020 11:46 AM
+	text/plain
+		0        98178
+		1        98125
+		2        98028
+		3        98136
+		4        98074
+		         ...  
+		21608    98103
+		21609    98146
+		21610    98144
+		21611    98027
+		21612    98144
+		Name: zipcode, Length: 21613, dtype: int64
+
+Code cell <hCdNh6OtjCh1>
+#%% [code]
+plt.scatter(df.zipcode,df.price,color ='green')
+plt.title('which of the price location by zipcode')
+Execution output from Jun 27, 2020 11:47 AM
+	text/plain
+		Text(0.5, 1.0, 'which of the price location by zipcode')
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <PCZKJfnGGyFg>
+#%% [code]
+#MACHINE LEARNING
+#SUPERVISED LEARNING ALGORITHM - REGRESSION
+#1) LINEAR REGRESSION
+
+
+Code cell <9EFhxQ6MIT03>
+#%% [code]
+df.columns
+Execution output from Jun 27, 2020 11:57 AM
+	text/plain
+		Index(['date', 'price', 'bedrooms', 'bathrooms', 'sqft_living', 'sqft_lot',
+		       'floors', 'condition', 'grade', 'sqft_above', 'sqft_basement',
+		       'yr_built', 'yr_renovated', 'zipcode', 'lat', 'long', 'sqft_living15',
+		       'sqft_lot15'],
+		      dtype='object')
+
+Code cell <29L6O5utJJrZ>
+#%% [code]
+square= df[ 'sqft_living']
+
+Code cell <fMlUzyVBJ1Fe>
+#%% [code]
+price=df['price']
+
+Code cell <pKdtaLx8Uakz>
+#%% [code]
+x = np.array(square).reshape(-1,1)
+y = np.array(price)
+
+Code cell <MGFyGvZeKLoq>
+#%% [code]
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.2,shuffle=True)
+
+Code cell <veI6WPSLKjv0>
+#%% [code]
+from sklearn.linear_model import LinearRegression
+reg = LinearRegression()
+
+Code cell <MLIk5xsR0N-5>
+#%% [code]
+reg.fit(x_train,y_train)
+Execution output from Jun 27, 2020 12:55 PM
+	text/plain
+		LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
+
+Code cell <KOHqM3J20Vp3>
+#%% [code]
+y_pred = reg.predict(x_test)
+
+Code cell <ucXPPv-R08Ks>
+#%% [code]
+plt.scatter(x_train,y_train,color ='green')
+plt.plot(x_train ,reg.predict(x_train))
+plt.title('VISUALS ')
+plt.xlabel('square')
+plt.ylabel('price')
+
+plt.show()
+Execution output from Jun 27, 2020 12:55 PM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <5XmvEvS_2xIY>
+#%% [code]
+plt.scatter(x_test,y_test,color ='red')
+plt.plot(x_train ,reg.predict(x_train), color ='green')
+plt.title('VISUALS ')
+plt.xlabel('square')
+plt.ylabel('price')
+
+plt.show()
+Execution output from Jun 27, 2020 12:55 PM
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <Y1xJ9f6wNyJd>
+#%% [code]
+type(reg.coef_)
+
+Execution output from Jun 27, 2020 12:56 PM
+	text/plain
+		numpy.ndarray
+
+Code cell <MiP_hmFxXdbH>
+#%% [code]
+y_pred
+Execution output from Jun 27, 2020 1:00 PM
+	text/plain
+		array([715100.14632907, 402004.13514937, 565603.85270273, ...,
+		       345590.43944132, 777155.21160793, 636120.9723378 ])
+
+Code cell <Hf8taNmrXhwI>
+#%% [code]
+from sklearn import metrics
+
+Code cell <LPqVvMFPXoSh>
+#%% [code]
+print("MAE:", metrics.mean_absolute_error(y_test,y_pred))
+print("MSE:", metrics.mean_squared_error(y_test,y_pred))
+print("RMSE:", np.sqrt(metrics.mean_squared_error(y_test,y_pred)))
+
+	Stream
+		MAE: 172778.98975473095
+		MSE: 67030411676.620636
+		RMSE: 258902.32072467144
+
+Code cell <o7fNPQ7MYBjZ>
+#%% [code]
+print(metrics.explained_variance_score(y_test,y_pred))
+
+	Stream
+		0.4833932186755773
+
+Code cell <xgaIJMABYkFM>
+#%% [code]
+plt.figure(figsize=(10,5))
+sns.distplot((y_test-y_pred),bins=50,hist_kws=dict(edgecolor="g", linewidth=2));
+plt.xlabel("PRICE")
+plt.title("DISTRIBUTION OF ERROR (TEST PRICE- PREDICTED PRICE)")
+plt.savefig("lr1")
+
+	text/plain
+		<Figure size 720x360 with 1 Axes>
+
+Code cell <plhJCLqEb2LZ>
+#%% [code]
+plt.figure(figsize=(10,5))
+sns.regplot(y_test,y_pred,df,color='red')
+plt.xlabel("TEST PRICES")
+plt.ylabel("PREDICTED PRICES")
+plt.title("LINEAR REGRESSION CURVE")
+plt.savefig("lr3")
+	text/plain
+		<Figure size 720x360 with 1 Axes>
