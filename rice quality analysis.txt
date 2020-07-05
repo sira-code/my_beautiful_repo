@@ -1,0 +1,403 @@
+                              SHIVANGI PANDEY
+                           RICE QUALITY ANALYSIS
+
+PYTHON CODE 1:-
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+def get_classificaton(ratio):
+	ratio =round(ratio,1)
+	toret=""
+	if(ratio>=3):
+		toret="Slender"
+	elif(ratio>=2.1 and ratio<3):
+		toret="Medium"
+	elif(ratio>=1.1 and ratio<2.1):
+		toret="Bold"
+	elif(ratio<=1):
+		toret="Round"
+	toret="("+toret+")"
+	return toret
+
+print ("START")
+img = cv2.imread('rice image1.jpg',0)
+
+#convert into binary
+ret,binary = cv2.threshold(img,160,255,cv2.THRESH_BINARY)
+
+#averaging filter
+kernel = np.ones((5,5),np.float32)/9
+dst = cv2.filter2D(binary,-1,kernel)# -1 -depth of  destination image
+
+kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+
+#erosion
+erosion = cv2.erode(dst,kernel2,iterations = 1)
+#dilation 
+dilation = cv2.dilate(erosion,kernel2,iterations = 1)
+
+#edge detection
+edges = cv2.Canny(dilation,100,200)
+
+### Size detection
+contours,hierarchy = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+print ("NUMBER OF RICE GRAINS :=",len(contours))
+total_ar=0
+for cnt in contours:
+	x,y,w,h = cv2.boundingRect(cnt)
+	aspect_ratio = float(w)/h
+	if(aspect_ratio<1):
+		aspect_ratio=1/aspect_ratio
+	print (round(aspect_ratio,2),get_classificaton(aspect_ratio))
+	total_ar+=aspect_ratio
+avg_ar=total_ar/len(contours)
+print ("AVG ASPECT RATIO:=",round(avg_ar,2),get_classificaton(avg_ar))
+
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(img,'gray')
+plt.title("ORIGINAL IMAGE IS GIVEN ")
+
+
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(binary,'gray')
+plt.title("BINARY IMAGE")
+
+plt.subplot(imgs_row,imgs_col,3),plt.imshow(dst,'gray')
+plt.title("FILTERED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,4),plt.imshow(erosion,'gray')
+plt.title("ERODED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,5),plt.imshow(dilation,'gray')
+plt.title("DIALATED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,6),plt.imshow(edges,'gray')
+plt.title("EDGE DETECT")
+
+plt.show()
+
+INLINE :
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+Code cell <5CCVpSaliD-l>
+#%% [code]
+def get_classificaton(ratio):
+	ratio =round(ratio,1)
+	toret=""
+	if(ratio>=3):
+		toret="Slender"
+	elif(ratio>=2.1 and ratio<3):
+		toret="Medium"
+	elif(ratio>=1.1 and ratio<2.1):
+		toret="Bold"
+	elif(ratio<=1):
+		toret="Round"
+	toret="("+toret+")"
+	return toret
+
+Code cell <jLSNLoQhiUsU>
+#%% [code]
+print ("START")
+img = cv2.imread('rice image1.jpg',0)
+Execution output from Jul 4, 2020 11:12 PM
+	Stream
+		START
+
+Code cell <WawSTgxvim7X>
+#%% [code]
+#convert into binary
+ret,binary = cv2.threshold(img,160,255,cv2.THRESH_BINARY)
+
+Code cell <WM1T8x4GjHr8>
+#%% [code]
+#averaging filter
+kernel = np.ones((5,5),np.float32)/9
+dst = cv2.filter2D(binary,-1,kernel)# -1 -depth of  destination image
+
+kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+
+Code cell <ruD45VMojZN2>
+#%% [code]
+#erosion
+erosion = cv2.erode(dst,kernel2,iterations = 1)
+#dilation 
+dilation = cv2.dilate(erosion,kernel2,iterations = 1)
+
+Code cell <acUicTGUjiOZ>
+#%% [code]
+#edge detection
+edges = cv2.Canny(dilation,100,200)
+
+Code cell <s2MU1mGDjlgh>
+#%% [code]
+### Size detection
+contours,hierarchy = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+print ("NUMBER OF RICE GRAINS :=",len(contours))
+total_ar=0
+for cnt in contours:
+	x,y,w,h = cv2.boundingRect(cnt)
+	aspect_ratio = float(w)/h
+	if(aspect_ratio<1):
+		aspect_ratio=1/aspect_ratio
+	print (round(aspect_ratio,2),get_classificaton(aspect_ratio))
+	total_ar+=aspect_ratio
+avg_ar=total_ar/len(contours)
+print ("AVG ASPECT RATIO:=",round(avg_ar,2),get_classificaton(avg_ar))
+
+	Stream
+		NUMBER OF RICE GRAINS := 1
+		1.37 (Bold)
+		AVG ASPECT RATIO:= 1.37 (Bold)
+
+Code cell <GSX32M_xkZNv>
+#%% [code]
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(img,'gray')
+plt.title("ORIGINAL IMAGE IS GIVEN ")
+
+	text/plain
+		Text(0.5, 1.0, 'ORIGINAL IMAGE IS GIVEN ')
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <yoQ4GokKk0ND>
+#%% [code]
+
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(binary,'gray')
+plt.title("BINARY IMAGE")
+
+plt.subplot(imgs_row,imgs_col,3),plt.imshow(dst,'gray')
+plt.title("FILTERED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,4),plt.imshow(erosion,'gray')
+plt.title("ERODED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,5),plt.imshow(dilation,'gray')
+plt.title("DIALATED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,6),plt.imshow(edges,'gray')
+plt.title("EDGE DETECT")
+
+plt.show()
+
+	text/plain
+		<Figure size 432x288 with 5 Axes>
+
+PYTHON CODE 2:-
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+def get_classificaton(ratio):
+	ratio =round(ratio,1)
+	toret=""
+	if(ratio>=3):
+		toret="Slender"
+	elif(ratio>=2.1 and ratio<3):
+		toret="Medium"
+	elif(ratio>=1.1 and ratio<2.1):
+		toret="Bold"
+	elif(ratio<=1):
+		toret="Round"
+	toret="("+toret+")"
+	return toret
+
+print ("START")
+img = cv2.imread('rice.png',0)
+
+#convert into binary
+ret,binary = cv2.threshold(img,160,255,cv2.THRESH_BINARY)
+
+#averaging filter
+kernel = np.ones((5,5),np.float32)/9
+dst = cv2.filter2D(binary,-1,kernel)# -1 -depth of  destination image
+
+kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+
+#erosion
+erosion = cv2.erode(dst,kernel2,iterations = 1)
+#dilation 
+dilation = cv2.dilate(erosion,kernel2,iterations = 1)
+
+#edge detection
+edges = cv2.Canny(dilation,100,200)
+
+### Size detection
+contours,hierarchy = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+print ("NUMBER OF RICE GRAINS :=",len(contours))
+total_ar=0
+for cnt in contours:
+	x,y,w,h = cv2.boundingRect(cnt)
+	aspect_ratio = float(w)/h
+	if(aspect_ratio<1):
+		aspect_ratio=1/aspect_ratio
+	print (round(aspect_ratio,2),get_classificaton(aspect_ratio))
+	total_ar+=aspect_ratio
+avg_ar=total_ar/len(contours)
+print ("AVG ASPECT RATIO:=",round(avg_ar,2),get_classificaton(avg_ar))
+
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(img,'gray')
+plt.title("ORIGINAL IMAGE IS GIVEN ")
+
+
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(binary,'gray')
+plt.title("BINARY IMAGE")
+
+plt.subplot(imgs_row,imgs_col,3),plt.imshow(dst,'gray')
+plt.title("FILTERED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,4),plt.imshow(erosion,'gray')
+plt.title("ERODED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,5),plt.imshow(dilation,'gray')
+plt.title("DIALATED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,6),plt.imshow(edges,'gray')
+plt.title("EDGE DETECT")
+
+plt.show()
+
+INLINE:
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+Code cell <5CCVpSaliD-l>
+#%% [code]
+def get_classificaton(ratio):
+	ratio =round(ratio,1)
+	toret=""
+	if(ratio>=3):
+		toret="Slender"
+	elif(ratio>=2.1 and ratio<3):
+		toret="Medium"
+	elif(ratio>=1.1 and ratio<2.1):
+		toret="Bold"
+	elif(ratio<=1):
+		toret="Round"
+	toret="("+toret+")"
+	return toret
+
+Code cell <jLSNLoQhiUsU>
+#%% [code]
+print ("START")
+img = cv2.imread('rice.png',0)
+Execution output from Jul 4, 2020 11:27 PM
+	Stream
+		START
+
+Code cell <WawSTgxvim7X>
+#%% [code]
+#convert into binary
+ret,binary = cv2.threshold(img,160,255,cv2.THRESH_BINARY)
+
+Code cell <WM1T8x4GjHr8>
+#%% [code]
+#averaging filter
+kernel = np.ones((5,5),np.float32)/9
+dst = cv2.filter2D(binary,-1,kernel)# -1 -depth of  destination image
+
+kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+
+Code cell <ruD45VMojZN2>
+#%% [code]
+#erosion
+erosion = cv2.erode(dst,kernel2,iterations = 1)
+#dilation 
+dilation = cv2.dilate(erosion,kernel2,iterations = 1)
+
+Code cell <acUicTGUjiOZ>
+#%% [code]
+#edge detection
+edges = cv2.Canny(dilation,100,200)
+
+Code cell <s2MU1mGDjlgh>
+#%% [code]
+### Size detection
+contours,hierarchy = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+print ("NUMBER OF RICE GRAINS :=",len(contours))
+total_ar=0
+for cnt in contours:
+	x,y,w,h = cv2.boundingRect(cnt)
+	aspect_ratio = float(w)/h
+	if(aspect_ratio<1):
+		aspect_ratio=1/aspect_ratio
+	print (round(aspect_ratio,2),get_classificaton(aspect_ratio))
+	total_ar+=aspect_ratio
+avg_ar=total_ar/len(contours)
+print ("AVG ASPECT RATIO:=",round(avg_ar,2),get_classificaton(avg_ar))
+
+	Stream
+		NUMBER OF RICE GRAINS := 30
+		3.17 (Slender)
+		1.73 (Bold)
+		2.38 (Medium)
+		1.07 (Bold)
+		1.14 (Bold)
+		2.11 (Medium)
+		4.0 (Slender)
+		1.55 (Bold)
+		2.11 (Medium)
+		3.5 (Slender)
+		2.22 (Medium)
+		2.75 (Medium)
+		1.14 (Bold)
+		3.0 (Slender)
+		2.2 (Medium)
+		1.91 (Bold)
+		2.86 (Medium)
+		1.12 (Bold)
+		2.86 (Medium)
+		3.0 (Slender)
+		1.33 (Bold)
+		2.11 (Medium)
+		2.33 (Medium)
+		3.0 (Slender)
+		2.38 (Medium)
+		1.67 (Bold)
+		1.73 (Bold)
+		2.62 (Medium)
+		2.86 (Medium)
+		3.14 (Slender)
+		AVG ASPECT RATIO:= 2.3 (Medium)
+
+Code cell <GSX32M_xkZNv>
+#%% [code]
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(img,'gray')
+plt.title("ORIGINAL IMAGE IS GIVEN ")
+
+	text/plain
+		Text(0.5, 1.0, 'ORIGINAL IMAGE IS GIVEN ')
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <yoQ4GokKk0ND>
+#%% [code]
+
+plt.subplot(imgs_row,imgs_col,1),plt.imshow(binary,'gray')
+plt.title("BINARY IMAGE")
+
+plt.subplot(imgs_row,imgs_col,3),plt.imshow(dst,'gray')
+plt.title("FILTERED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,4),plt.imshow(erosion,'gray')
+plt.title("ERODED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,5),plt.imshow(dilation,'gray')
+plt.title("DIALATED IMAGE")
+
+plt.subplot(imgs_row,imgs_col,6),plt.imshow(edges,'gray')
+plt.title("EDGE DETECT")
+
+plt.show()
+	text/plain
+		<Figure size 432x288 with 5 Axes>
+
+
+
+
+
+
+
