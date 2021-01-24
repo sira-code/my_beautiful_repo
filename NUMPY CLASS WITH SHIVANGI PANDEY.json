@@ -1,0 +1,630 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# NUMPY"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "10\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "arr= np.array(10)\n",
+    "print(arr)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[1 2 3 4]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "arr= np.array([1,2,3,4])\n",
+    "print(arr)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[1 2 3]\n",
+      " [4 5 6]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "arr= np.array([[1,2,3], [4,5,6]])\n",
+    "print(arr)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[[1 2 3]\n",
+      "  [4 5 6]]\n",
+      "\n",
+      " [[1 2 3]\n",
+      "  [4 5 6]]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "arr = np.array([[[1, 2, 3], [4, 5, 6]], [[1, 2, 3], [4, 5, 6]]])\n",
+    "print(arr) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0\n",
+      "1\n",
+      "2\n",
+      "3\n"
+     ]
+    }
+   ],
+   "source": [
+    "a = np.array(10)\n",
+    "b = np.array([1, 2, 3, 4])\n",
+    "c = np.array([[1, 2, 3], [4, 5, 6]])\n",
+    "d = np.array([[[1, 2, 3], [4, 5, 6]], [[1, 2, 3], [4, 5, 6]]])\n",
+    "\n",
+    "print(a.ndim)\n",
+    "print(b.ndim)\n",
+    "print(c.ndim)\n",
+    "print(d.ndim) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([1, 4, 7])"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.arange(start=1,stop=10,step=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### In this example, start is 1. Therefore, the first element of the obtained array is 1. step is 3, which is why your second value is 1+3, that is 4, while the third value in the array is 4+3, which equals 7.Following this pattern, the next value would be 10 (7+3), but counting must be ended before stop is reached, so this one is not included.You can pass start, stop, and step as positional arguments as well:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([1, 4, 7])"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.arange(1,10,3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 1.,  4.,  7., 10.])"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.arange(1,10.1,3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([1, 2, 3, 4, 5, 6, 7, 8, 9])"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.arange(1,10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.arange(10)#stop is 10 ,start is 0. step is 1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "np.arange(stop=10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[0.   0.25 0.5  0.75 1.   1.25 1.5  1.75 2.  ]\n"
+     ]
+    }
+   ],
+   "source": [
+    "f= np.linspace(0,2,9)#give the 9 distinct no. from 0 to 2\n",
+    "print(f)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[7 7]\n",
+      " [7 7]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "h = np.full((2,2),7)#fill the matrix with 7\n",
+    "print(h)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[0.64398167 0.43982635]\n",
+      " [0.73268709 0.76101985]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "j= np.random.random((2,2))# random matrix of order 2,2\n",
+    "print(j)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## ARRAY INDEXING "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1\n"
+     ]
+    }
+   ],
+   "source": [
+    "arr = np.array([1, 2, 3, 4])\n",
+    "print(arr[0]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "7\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(arr[2] + arr[3]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "2nd element on 1st dim  2\n"
+     ]
+    }
+   ],
+   "source": [
+    "arr = np.array([[1,2,3,4,5], [6,7,8,9,10]])# acccesing 2d array\n",
+    "print('2nd element on 1st dim ', arr[0, 1]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "6\n"
+     ]
+    }
+   ],
+   "source": [
+    "arr = np.array([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]])\n",
+    "print(arr[0, 1, 2]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Last element from 2nd dim:  10\n"
+     ]
+    }
+   ],
+   "source": [
+    "arr = np.array([[1,2,3,4,5], [6,7,8,9,10]]) #neg indexing\n",
+    "print('Last element from 2nd dim: ', arr[1, -1]) "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# ARRAY SLICING"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Slicing in python means taking elements from one given index to another given index.\n",
+    "#We pass slice instead of index like this: [start:end].\n",
+    "#We can also define the step, like this: [start:end:step]."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[2 3 4 5]\n"
+     ]
+    }
+   ],
+   "source": [
+    "arr = np.array([1, 2, 3, 4, 5, 6, 7])\n",
+    "print(arr[1:5]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Note: The result includes the start index, but excludes the end index."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[5 6 7]\n"
+     ]
+    }
+   ],
+   "source": [
+    "arr = np.array([1, 2, 3, 4, 5, 6, 7])\n",
+    "print(arr[4:]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[1 2 3 4]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(arr[:4]) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[5 6]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(arr[-3:-1]) # negetive slicing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[2 4]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(arr[1:5:2])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[1 4 7]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(arr[::3])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Data Types in Python  , By default Python have these data types:\n",
+    "\n",
+    "    strings - used to represent text data, the text is given under quote marks. e.g. \"ABCD\"\n",
+    "    integer - used to represent integer numbers. e.g. -1, -2, -3\n",
+    "    float - used to represent real numbers. e.g. 1.2, 42.42\n",
+    "    boolean - used to represent True or False.\n",
+    "    complex - used to represent complex numbers. e.g. 1.0 + 2.0j, 1.5 + 2.5j"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Data Types in NumPy  , NumPy has some extra data types, and refer to data types with one character, like i for integers, u for unsigned integers etc.\n",
+    "\n",
+    "Below is a list of all data types in NumPy and the characters used to represent them.\n",
+    "\n",
+    "    i - integer\n",
+    "    b - boolean\n",
+    "    u - unsigned integer\n",
+    "    f - float\n",
+    "    c - complex float\n",
+    "    m - timedelta\n",
+    "    M - datetime\n",
+    "    O - object\n",
+    "    S - string\n",
+    "    U - unicode string\n",
+    "    V - fixed chunk of memory for other type ( void )\n",
+    " "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
